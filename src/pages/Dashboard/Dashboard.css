@@ -1,0 +1,152 @@
+/* White / premium theme: convert dark backgrounds to white surfaces */
+body, html {
+    height: 100%;
+    overflow-y: auto;
+    /* subtle off-white page background so white cards read clearly */
+    background-color: #f8f9fa;
+}
+
+.dashboard-wrapper {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: #f8f9fa;
+}
+.dashboard-container {
+    padding: 20px;
+    background-color: whitesmoke;
+    min-height: 100vh;
+    color: #0f1724; /* dark text */
+}
+
+.dashboard-title {
+    color: #0f1724;
+    margin-bottom: 30px;
+    font-weight: 600;
+    border-bottom: 1px solid #eef4f8;
+    padding-bottom: 10px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.stat-card {
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid #acc7da;
+    
+    box-shadow: 0 6px 18px rgba(15, 23, 36, 0.05);
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(15, 23, 36, 0.07);
+}
+
+.stat-icon {
+    font-size: 2rem;
+    margin-right: 20px;
+    color: #2563eb; /* accent */
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(37, 99, 235, 0.06);
+}
+
+.stat-content h3 {
+    margin: 0 0 5px 0;
+    color: #6b7280; /* muted */
+    font-size: 1rem;
+}
+
+.stat-content p {
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #0f1724;
+}
+
+.recent-orders-card {
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 2px 6px 18px rgba(15, 23, 36, 0.05);
+    border: 2px solid #acc7da;
+}
+
+.recent-orders-title {
+    color: #0f1724;
+    margin-top: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.orders-table-container {
+    overflow-x: auto;
+}
+
+.orders-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.orders-table th {
+    background-color: transparent;
+    color: #0f1724;
+    padding: 12px 15px;
+    text-align: left;
+    font-weight: 600;
+    border-bottom: 1px solid #babcbe;
+}
+
+.orders-table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #d3e4f5de;
+    color: #334155;
+}
+
+.orders-table tr:hover {
+    background-color: #e3edf3;
+}
+
+/* Provide both class names used in the project */
+.loading,
+.error,
+.dashboard-loading,
+.dashboard-error {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: #0f1724;
+    font-size: 1.2rem;
+}
+
+@media (max-width: 768px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .stat-card {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .stat-icon {
+        margin-right: 0;
+        margin-bottom: 15px;
+    }
+}
