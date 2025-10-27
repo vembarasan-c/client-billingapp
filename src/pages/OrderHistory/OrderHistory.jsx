@@ -5,6 +5,8 @@ import {latestOrders} from "../../Service/OrderService.js";
 const OrderHistory = () => {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10;
 
     useEffect(() => {
         const fetchOrders = async () => {
@@ -35,6 +37,37 @@ const OrderHistory = () => {
         return new Date(dateString).toLocaleDateString('en-US', options);
     }
 
+    // Pagination logic
+    const totalPages = Math.ceil(orders.length / itemsPerPage);
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const paginatedOrders = orders.slice(startIndex, endIndex);
+
+    const goToPage = (page) => {
+        setCurrentPage(page);
+    };
+
+    const goToPrevious = () => {
+        setCurrentPage(prev => Math.max(prev - 1, 1));
+    };
+
+    const goToNext = () => {
+        setCurrentPage(prev => Math.min(prev + 1, totalPages));
+    };
+
+    // Compute sliding window of up to 3 page numbers
+    const getPageNumbers = () => {
+        if (totalPages <= 3) {
+            return Array.from({ length: totalPages }, (_, i) => i + 1);
+        }
+        let start = Math.max(1, Math.min(currentPage - 1, totalPages - 2));
+        let end = Math.min(totalPages, start + 2);
+        if (end - start < 2) {
+            start = Math.max(1, end - 2);
+        }
+        return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+    };
+
     if (loading) {
         return <div className="text-center py-4">Loading orders...</div>
     }
@@ -61,7 +94,7 @@ const OrderHistory = () => {
                     </tr>
                     </thead>
                     <tbody>
-                    {orders.map(order => (
+                    {paginatedOrders.map(order => (
                         <tr key={order.orderId}>
                             <td>{order.orderId}</td>
                             <td>{order.customerName} <br/>
@@ -79,6 +112,39 @@ const OrderHistory = () => {
                     </tbody>
                 </table>
             </div>
+            
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+                <div className="pagination-container">
+                    <button 
+                        onClick={goToPrevious} 
+                        disabled={currentPage === 1}
+                        className="pagination-btn"
+                    >
+                        <i className="bi bi-chevron-left"></i> Previous
+                    </button>
+                    
+                    <div className="page-numbers">
+                        {getPageNumbers().map((page) => (
+                            <button
+                                key={page}
+                                onClick={() => goToPage(page)}
+                                className={`page-number ${currentPage === page ? 'active' : ''}`}
+                            >
+                                {page}
+                            </button>
+                        ))}
+                    </div>
+                    
+                    <button 
+                        onClick={goToNext} 
+                        disabled={currentPage === totalPages}
+                        className="pagination-btn"
+                    >
+                        Next <i className="bi bi-chevron-right"></i>
+                    </button>
+                </div>
+            )}
         </div>
     )
 }

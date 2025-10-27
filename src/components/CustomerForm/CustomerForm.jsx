@@ -26,7 +26,7 @@ const CustomerForm = ({customerName, mobileNumber, username, setUsername, setMob
     
 
     return (
-        <div className="p-3">
+        <div className="p-2">
             {/* select existing user (parent should pass `users` prop: [{ id, name, mobile }] ) */}
             <div className="mb-2">
                 <div className="d-flex align-items-center gap-2">
@@ -62,9 +62,18 @@ const CustomerForm = ({customerName, mobileNumber, username, setUsername, setMob
                         type="text"
                         className="form-control form-control-sm"
                         id="mobileNumber"
-                        onChange={(e) => setMobileNumber(e.target.value)}
+                        onChange={(e) => {
+                            const value = e.target.value;
+                            // Allow only digits and limit to 10 characters
+                            if (/^\d{0,10}$/.test(value)) {
+                                setMobileNumber(value);
+                            }
+                        }}
                         value={mobileNumber}
                         required
+                        pattern="\d{10}"
+                        maxLength={10}
+                        title="Please enter a valid 10-digit phone number"
                     />
                 </div>
             </div>

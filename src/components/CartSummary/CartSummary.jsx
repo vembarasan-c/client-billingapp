@@ -83,7 +83,7 @@ const CartSummary = ({customerName, mobileNumber, username, setUsername, setMobi
             console.log(username);
 
             // small delay to ensure popup is visible
-            await new Promise(r => setTimeout(r, 10000));
+            await new Promise(r => setTimeout(r, 13000));
             try {
                 // window.print();
                 await new Promise(r => setTimeout(r, 600));
