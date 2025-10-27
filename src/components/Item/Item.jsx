@@ -13,17 +13,17 @@ const Item = ({itemName, itemPrice, itemPriceBack, itemImage, itemId}) => {
         });
     }
     return (
-        <div className="p-3 bg-dark rounded shadow-sm h-100 d-flex align-items-center item-card">
+        <div  className="  p-3 bg-light rounded shadow-sm h-100 d-flex align-items-center item-card">
             <div style={{position: "relative", marginRight: "15px"}}>
                 <img src={itemImage} alt={itemName} className="item-image" />
             </div>
 
             <div className="flex-grow-1 ms-2">
-                <h6 className="mb-1 text-light">{itemName}</h6>
+                <h6 className="mb-1 text-dark ">{itemName}</h6>
                 <div className="d-flex gap-2">
                     <button
                         type="button"
-                        className="btn btn-outline-light btn-sm"
+                        className="btn  btn-outline-dark btn-sm"
                         onClick={() => addToCart({
                             name: itemName,
                             price: itemPrice,
@@ -36,7 +36,7 @@ const Item = ({itemName, itemPrice, itemPriceBack, itemImage, itemId}) => {
 
                     <button
                         type="button"
-                        className="btn btn-outline-light btn-sm"
+                        className="btn btn-outline-dark btn-sm"
                         onClick={() => addToCart({
                             name: itemName,
                             price: itemPriceBack,

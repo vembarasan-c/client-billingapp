@@ -47,7 +47,7 @@ const Explore = () => {
                 <div className="cart-items-container" style={{height: '50%', overflowY: 'auto'}}>
                     <CartItems />
                 </div>
-                <div className="cart-summary-container" style={{height: '30%'}}>
+                <div className="cart-summary-container" style={{height: '33%'}}>
                     <CartSummary
                         customerName={customerName}
                         mobileNumber={mobileNumber}

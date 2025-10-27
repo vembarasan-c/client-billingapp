@@ -38,26 +38,45 @@ export const AppContextProvider = (props) => {
         setCartItems(cartItems.map(item => item.itemId === itemId ? {...item, quantity: newQuantity} : item));
     }
 
+    // on mount, restore auth from localStorage (so refresh keeps login)
     useEffect(() => {
-        async function loadData() {
-            if (localStorage.getItem("token") && localStorage.getItem("role")) {
-                setAuthData(
-                    localStorage.getItem("token"),
-                    localStorage.getItem("role")
-                );
-            }
-            const response = await fetchCategories();
-            const itemResponse = await fetchItems();
-            const userResponse = await fetchUsers();
-
-            console.log('item response', itemResponse);
-            setCategories(response.data);
-            setItemsData(itemResponse.data);
-            setUsers(userResponse.data);
-
-        }
-        loadData();
+        const token = localStorage.getItem('token');
+        const role = localStorage.getItem('role');
+        if (token && role) setAuthData(token, role);
     }, []);
+
+    // fetch protected data only when authenticated
+    useEffect(() => {
+        let cancelled = false;
+        async function loadProtectedData() {
+            if (!auth || !auth.token) {
+                // clear sensitive data when not authenticated
+                setCategories([]);
+                setItemsData([]);
+                setUsers([]);
+                return;
+            }
+
+            try {
+                const [response, itemResponse, userResponse] = await Promise.all([
+                    fetchCategories(),
+                    fetchItems(),
+                    fetchUsers()
+                ]);
+                if (cancelled) return;
+                setCategories(response.data || []);
+                setItemsData(itemResponse.data || []);
+                setUsers(userResponse.data || []);
+            } catch (err) {
+                console.error('Failed to load protected data', err);
+                // keep previous data or clear depending on policy
+            }
+        }
+
+        loadProtectedData();
+
+        return () => { cancelled = true; };
+    }, [auth && auth.token]);
 
     const setAuthData = (token, role) => {
         setAuth({token, role});
@@ -72,6 +91,7 @@ export const AppContextProvider = (props) => {
         setCategories,
         auth,
         users,
+        setUsers,
         setAuthData,
         itemsData,
         setItemsData,

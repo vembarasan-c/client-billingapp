@@ -40,7 +40,9 @@ const UserForm = ({setUsers, selectedUser, onUpdateUser}) => {
         try {
             if (data.userId) { // update existing user
                 const response = await updateUser(data.userId, data);
-                onUpdateUser && onUpdateUser(response.data);
+                // If backend returns updated user use it; otherwise fall back to local form data
+                const updatedUser = (response && response.data && response.data.userId) ? response.data : { ...data };
+                onUpdateUser && onUpdateUser(updatedUser);
                 toast.success("User updated");
             } else { // create new user
                 const response = await addUser(data);
@@ -53,6 +55,7 @@ const UserForm = ({setUsers, selectedUser, onUpdateUser}) => {
                 password: "",
                 role: "ROLE_USER",
             })
+
         } catch (e) {
             console.error(e);
             toast.error("Error adding user");

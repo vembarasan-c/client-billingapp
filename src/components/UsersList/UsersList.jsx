@@ -9,6 +9,7 @@ const UsersList = ({users, setUsers, onEdit}) => {
 
     const editUser = (id) => {
         const user = users.find(u => u.userId === id);
+        console.log('editing user', user);
         if (user && typeof onEdit === 'function') {
             
             onEdit(user);
@@ -52,8 +53,8 @@ const UsersList = ({users, setUsers, onEdit}) => {
             </div>
             <div className="row g-3 pe-2">
                 {
-                    filteredUsers.map((user, index) => (
-                        <div key={index} className="col-12">
+                    filteredUsers.map((user) => (
+                        <div key={user.userId} className="col-12">
                             <div className="card p-3 "  style={{  maxWidth: '100%'}}>
                                 <div className="d-flex align-items-center">
                                     <div className="flex-grow-1">

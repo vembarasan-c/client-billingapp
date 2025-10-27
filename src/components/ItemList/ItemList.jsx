@@ -1,12 +1,15 @@
-import {useContext, useState} from "react";
+import {use, useContext, useState, useEffect} from "react";
 import {AppContext} from "../../context/AppContext.jsx";
-import {deleteItem} from "../../Service/ItemService.js";
+import {deleteItem, fetchItems} from "../../Service/ItemService.js";
 import toast from "react-hot-toast";
 import './ItemList.css';
+
 
 const ItemList = () => {
     const {itemsData, setItemsData} = useContext(AppContext);
     const [searchTerm, setSearchTerm] = useState("");
+
+    
 
     const filteredItems = itemsData.filter((item) => {
         return item.name.toLowerCase().includes(searchTerm.toLowerCase());

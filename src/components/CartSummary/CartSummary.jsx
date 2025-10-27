@@ -83,14 +83,15 @@ const CartSummary = ({customerName, mobileNumber, username, setUsername, setMobi
             console.log(username);
 
             // small delay to ensure popup is visible
-            await new Promise(r => setTimeout(r, 300));
+            await new Promise(r => setTimeout(r, 10000));
             try {
-                window.print();
+                // window.print();
                 await new Promise(r => setTimeout(r, 600));
-                window.print();
+                // window.print();
             } catch (e) {
                 console.error('Print failed', e);
             }
+
             setShowPopup(false);
             clearAll();
         }
@@ -381,7 +382,7 @@ const CartSummary = ({customerName, mobileNumber, username, setUsername, setMobi
                     <span className="text-dark">₹{displayTax.toFixed(2)}</span>
                 </div>
 
-                <div className="d-flex justify-content-between mb-4">
+                <div className="d-flex justify-content-between mb-2">
                     <span className="text-dark">Total:</span>
                     <span className="text-dark">₹{displayGrandTotal.toFixed(2)}</span>
                 </div>
@@ -404,13 +405,14 @@ const CartSummary = ({customerName, mobileNumber, username, setUsername, setMobi
                 </button>
             </div>
 
-            <div className="d-flex gap-3 mt-3">
+            <div className="d-flex gap-3 mt-2 py-1">
                 <button
                     className="btn btn-warning flex-grow-1 modern-btn"
                     onClick={placeOrder}
                     disabled={isProcessing || !orderDetails}
                 >
                     Place Order
+                     {/* {isProcessing ? 'Place order...' : 'Order Summary'}  */}
                 </button>
             </div>
 

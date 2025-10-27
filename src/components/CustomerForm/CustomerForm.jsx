@@ -14,7 +14,7 @@ const CustomerForm = ({customerName, mobileNumber, username, setUsername, setMob
     // support several possible shapes of the context:
     // - [users, setUsers]
     // - { users, setUsers }
-    // - directly the users array
+
     if (Array.isArray(appCtx) && appCtx.length > 0) {
       users = appCtx[0];
     } else if (appCtx && typeof appCtx === 'object' && 'users' in appCtx) {
@@ -23,25 +23,12 @@ const CustomerForm = ({customerName, mobileNumber, username, setUsername, setMob
       users = appCtx;
     }
 
-    // const [data, setData] = useState({
-    //         username: "",
-    //         customername: "",
-    //         mobileNumber: ""
-    //     });
-    
-       
-    //  const onChangeHandler = (e) => {
-    //     const value = e.target.value;
-    //     const name = e.target.name;
-    //     setData((data) => ({...data, [name]: value}));
-    // }
-
     
 
     return (
         <div className="p-3">
             {/* select existing user (parent should pass `users` prop: [{ id, name, mobile }] ) */}
-            <div className="mb-3">
+            <div className="mb-2">
                 <div className="d-flex align-items-center gap-2">
                     <label htmlFor="selectUser" className="text-dark col-4">Select user: </label>
                     
@@ -55,7 +42,7 @@ const CustomerForm = ({customerName, mobileNumber, username, setUsername, setMob
                 </div>
             </div>
 
-            <div className="mb-3">
+            <div className="mb-2">
                 <div className="d-flex align-items-center gap-2">
                     <label htmlFor="customerName" className=" text-dark col-4">Customer name: </label>
                     <input
@@ -68,7 +55,7 @@ const CustomerForm = ({customerName, mobileNumber, username, setUsername, setMob
                     />
                 </div>
             </div>
-            <div className="mb-3">
+            <div className="mb-2">
                 <div className="d-flex align-items-center gap-2">
                     <label htmlFor="mobileNumber" className="text-dark col-4">Mobile number: </label>
                     <input
@@ -81,20 +68,7 @@ const CustomerForm = ({customerName, mobileNumber, username, setUsername, setMob
                     />
                 </div>
             </div>
-
-            {/* show all user names for reference (optional) */}
-            {/* {typeof users !== 'undefined' && users && users.length > 0 && (
-                <div className="mb-2">
-                    <label className="text-muted small">All users:</label>
-                    <div className="d-flex flex-wrap gap-2 mt-1">
-                        {users.map(u => (
-                            <span key={u.id ?? u.name} className="badge bg-light text-dark border">
-                                {u.name}
-                            </span>
-                        ))}
-                    </div>
-                </div>
-            )} */}
+            
 
             <div>
                 
