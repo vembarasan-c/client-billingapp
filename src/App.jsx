@@ -9,6 +9,7 @@ import { Toaster } from "react-hot-toast";
 import Login from "./pages/Login/Login.jsx";
 import OrderHistory from "./pages/OrderHistory/OrderHistory.jsx";
 import Analytics from "./pages/Analytics/Analytics.jsx";
+import Settings from "./pages/Settings/Settings.jsx";
 import { useContext } from "react";
 import { AppContext } from "./context/AppContext.jsx";
 import NotFound from "./pages/NotFound/NotFound.jsx";
@@ -47,6 +48,7 @@ const App = () => {
         <Route path="/explore" element={<Explore />} />
         <Route path="/analytics" element={<Analytics />} />
         <Route path="/orders" element={<OrderHistory />} />
+        <Route path="/settings" element={<Settings />} />
         {/*Admin only routes*/}
         <Route
           path="/category"

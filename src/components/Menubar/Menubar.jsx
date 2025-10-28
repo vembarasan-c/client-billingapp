@@ -129,17 +129,17 @@ const Menubar = () => {
               aria-labelledby="navbarDropdown"
             >
               <li>
+                <Link to="/settings" className="dropdown-item">
+                  <i className="bi bi-gear"></i> Settings
+                </Link>
                 <a href="#!" className="dropdown-item">
-                  Settings
-                </a>
-                <a href="#!" className="dropdown-item">
-                  Activity log
+                  <i className="bi bi-clock-history"></i> Activity log
                 </a>
                 <li>
                   <hr className="dropdown-divider" />
                 </li>
                 <a href="#!" className="dropdown-item" onClick={logout}>
-                  Logout
+                  <i className="bi bi-box-arrow-right"></i> Logout
                 </a>
               </li>
             </ul>
