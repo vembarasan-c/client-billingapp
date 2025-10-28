@@ -1,22 +1,29 @@
-import {useState} from "react";
+import { useState } from "react";
+import "./SearchBox.css";
 
-const SearchBox = ({onSearch}) => {
-    const [searchText, setSearchText] = useState("");
+const SearchBox = ({ onSearch }) => {
+  const [searchText, setSearchText] = useState("");
 
-    const handleInputChange = (e) => {
-        const text = e.target.value;
-        setSearchText(text);
-        onSearch(text);
-    }
+  const handleInputChange = (e) => {
+    const text = e.target.value;
+    setSearchText(text);
+    onSearch(text);
+  };
 
-    return (
-        <div className="input-group mb-3">
-            <input type="number" className="form-control" placeholder="Search items by ID:" value={searchText} onChange={handleInputChange} />
-            <span className="input-group-text bg-warning">
-                <i className="bi bi-search"></i>
-            </span>
-        </div>
-    )
-}
+  return (
+    <div className="search-box-container">
+      <input
+        type="number"
+        className="form-control search-input"
+        placeholder="Search items by ID..."
+        value={searchText}
+        onChange={handleInputChange}
+      />
+      <span className="search-icon">
+        <i className="bi bi-search"></i>
+      </span>
+    </div>
+  );
+};
 
 export default SearchBox;
