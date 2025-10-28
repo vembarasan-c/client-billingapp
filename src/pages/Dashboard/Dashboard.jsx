@@ -16,6 +16,7 @@ import {
   TextRun,
 } from "docx";
 import { saveAs } from "file-saver";
+import ReceiptPopup from "../../components/ReceiptPopup/ReceiptPopup.jsx";
 
 const Dashboard = () => {
   const [data, setData] = useState(null);
@@ -29,6 +30,10 @@ const Dashboard = () => {
   const [filteredOrders, setFilteredOrders] = useState([]);
   const [presetRange, setPresetRange] = useState("");
   const [paymentMode, setPaymentMode] = useState("");
+
+  // Invoice print state
+  const [showInvoice, setShowInvoice] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
 
   useEffect(() => {
     const loadData = async () => {
@@ -299,6 +304,21 @@ const Dashboard = () => {
 
   const topEmployee = getTopEmployee();
   const topProduct = getTopProduct();
+
+  // Invoice Print Functions
+  const handlePrintInvoice = (order) => {
+    setSelectedOrder(order);
+    setShowInvoice(true);
+  };
+
+  const handleCloseInvoice = () => {
+    setShowInvoice(false);
+    setSelectedOrder(null);
+  };
+
+  const handlePrint = () => {
+    window.print();
+  };
 
   // Export Functions
   const exportToCSV = () => {
@@ -1128,6 +1148,7 @@ const Dashboard = () => {
                   <th>Payment</th>
                   <th>Status</th>
                   <th>Time</th>
+                  <th>Invoice</th>
                 </tr>
               </thead>
               <tbody>
@@ -1158,11 +1179,20 @@ const Dashboard = () => {
                           minute: "2-digit",
                         })}
                       </td>
+                      <td>
+                        <button
+                          className="print-invoice-btn"
+                          onClick={() => handlePrintInvoice(order)}
+                          title="Print Invoice"
+                        >
+                          <i className="bi bi-printer-fill"></i>
+                        </button>
+                      </td>
                     </tr>
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="7" className="no-data">
+                    <td colSpan="8" className="no-data">
                       No orders found for the selected date range
                     </td>
                   </tr>
@@ -1207,6 +1237,15 @@ const Dashboard = () => {
           )}
         </div>
       </div>
+
+      {/* Invoice Popup */}
+      {showInvoice && selectedOrder && (
+        <ReceiptPopup
+          orderDetails={selectedOrder}
+          onClose={handleCloseInvoice}
+          onPrint={handlePrint}
+        />
+      )}
     </div>
   );
 };
