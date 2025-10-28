@@ -1157,7 +1157,12 @@ const Dashboard = () => {
                     <tr key={order.orderId}>
                       <td>{order.orderId.substring(0, 8)}...</td>
                       <td> {order.username} </td>
-                      <td>{order.customerName}</td>
+                      <td>
+                        {order.customerName} <br />
+                        <small className="text-muted">
+                          {order.phoneNumber}
+                        </small>
+                      </td>
                       <td>₹{order.grandTotal.toFixed(2)}</td>
                       <td>
                         <span
