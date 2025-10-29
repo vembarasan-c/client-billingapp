@@ -23,10 +23,25 @@ const Login = () => {
   };
 
   const onSubmitHandler = async (e) => {
+    console.log("Submitting login form", loginType);
+
     e.preventDefault();
     setLoading(true);
     try {
       const response = await login(data);
+
+      if(loginType === "admin" && response.data.role !== "ROLE_ADMIN") {
+        toast.error("Access denied: Not an admin account. Login in employee tab.");
+        setLoading(false);
+        return;
+      }
+
+      if(loginType === "employee" && response.data.role !== "ROLE_USER") {
+        toast.error("Access denied: Not an employee account. Login in admin tab.");
+        setLoading(false);
+        return;
+      }
+
       if (response.status === 200) {
         toast.success("Login successful");
         localStorage.setItem("token", response.data.token);
