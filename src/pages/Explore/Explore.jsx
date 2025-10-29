@@ -107,6 +107,7 @@ const Explore = () => {
             setMobileNumber={setMobileNumber}
             setCustomerName={setCustomerName}
             taxPercent={taxPercent}
+            setTaxPercent={setTaxPercent}
             showUpiOptions={showUpiOptions}
             setShowUpiOptions={setShowUpiOptions}
             showQRModal={showQRModal}

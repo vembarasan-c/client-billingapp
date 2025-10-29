@@ -12,12 +12,14 @@ const CartItems = () => {
         <div className="cart-items-list">
           {cartItems.map((item, index) => (
             <div key={index} className="cart-item">
-              <div className="d-flex justify-content-between align-items-center mb-2">
-                <h6 className="mb-0 text-dark">{item.name}</h6>
+
+              <div className="d-flex justify-content-between align-items-center mb-1">
+                <h6 className="mb-0 pl-2 ml-2 text-dark">{item.name}</h6>
                 <p className="mb-0 text-dark">
                   ₹{(item.price * item.quantity).toFixed(2)}
                 </p>
               </div>
+
               <div className="d-flex justify-content-between align-items-center">
                 <div className="d-flex align-items-center gap-2">
                   <button

@@ -59,7 +59,11 @@ const Menubar = () => {
               Explore
             </Link>
           </li>
-          <li className="nav-item">
+          
+          {isAdmin && (
+            <>
+
+            <li className="nav-item">
             <Link
               id={`${isActive ? "active" : ""}`}
               className={`nav-link ${isActive("/analytics") ? "fw-bold " : ""}`}
@@ -68,17 +72,7 @@ const Menubar = () => {
               Analytics
             </Link>
           </li>
-          <li className="nav-item">
-            <Link
-              id={`${isActive ? "active" : ""}`}
-              className={`nav-link ${isActive("/orders") ? "fw-bold " : ""}`}
-              to="/orders"
-            >
-              Order History
-            </Link>
-          </li>
-          {isAdmin && (
-            <>
+
               <li className="nav-item">
                 <Link
                   id={`${isActive ? "active" : ""}`}
@@ -110,6 +104,16 @@ const Menubar = () => {
               </li>
             </>
           )}
+
+          <li className="nav-item">
+            <Link
+              id={`${isActive ? "active" : ""}`}
+              className={`nav-link ${isActive("/orders") ? "fw-bold " : ""}`}
+              to="/orders"
+            >
+              Order History
+            </Link>
+          </li>
         </ul>
         {/*Add the dropdown for userprofile*/}
         <ul className="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
@@ -132,9 +136,6 @@ const Menubar = () => {
                 <Link to="/settings" className="dropdown-item">
                   <i className="bi bi-gear"></i> Settings
                 </Link>
-                <a href="#!" className="dropdown-item">
-                  <i className="bi bi-clock-history"></i> Activity log
-                </a>
                 <li>
                   <hr className="dropdown-divider" />
                 </li>
@@ -142,6 +143,7 @@ const Menubar = () => {
                   <i className="bi bi-box-arrow-right"></i> Logout
                 </a>
               </li>
+              
             </ul>
           </li>
         </ul>

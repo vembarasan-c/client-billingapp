@@ -13,8 +13,12 @@ const ManageUsers = () => {
     async function loadUsers() {
       try {
         setLoading(true);
+        
         const response = await fetchUsers();
-        setUsers(response.data);
+        const allUsers = Array.isArray(response?.data) ? response.data : [];
+        const onlyRoleUsers = allUsers.filter((u) => (u?.role ?? "") === "ROLE_USER");
+        setUsers(onlyRoleUsers);
+
       } catch (error) {
         console.error(error);
         toast.error("Unable to fetch users");
@@ -35,9 +39,17 @@ const ManageUsers = () => {
   };
 
   const onUpdateUser = (updated) => {
-    setUsers((prev) =>
-      prev.map((u) => (u.userId === updated.userId ? updated : u))
-    );
+    setUsers((prev) => {
+      // If the updated user is no longer ROLE_USER, remove from list
+      if ((updated?.role ?? "") !== "ROLE_USER") {
+        return prev.filter((u) => u.userId !== updated.userId);
+      }
+      // Otherwise, update or add if missing
+      const exists = prev.some((u) => u.userId === updated.userId);
+      return exists
+        ? prev.map((u) => (u.userId === updated.userId ? updated : u))
+        : [...prev, updated];
+    });
     setSelectedUser(null);
   };
 

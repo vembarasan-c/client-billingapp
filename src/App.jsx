@@ -44,12 +44,36 @@ const App = () => {
       )}
       <Toaster />
       <Routes>
+        
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/explore" element={<Explore />} />
-        <Route path="/analytics" element={<Analytics />} />
-        <Route path="/orders" element={<OrderHistory />} />
-        <Route path="/settings" element={<Settings />} />
+        <Route path="/explore"  element={ <Explore />} />
+        
+        
         {/*Admin only routes*/}
+        
+        <Route path="/analytics"
+         element={<ProtectedRoute 
+         element={ <Analytics />} 
+         allowedRoles={["ROLE_ADMIN"]}
+         />
+        } />
+
+        <Route path="/orders"
+         element={<ProtectedRoute 
+         element={ <OrderHistory />} 
+         allowedRoles={["ROLE_ADMIN"]}
+         />
+        } />
+        
+        <Route path="/settings"
+         element={<ProtectedRoute 
+         element={ <Settings />} 
+         allowedRoles={["ROLE_ADMIN"]}
+         />
+        } />
+        
+        
+
         <Route
           path="/category"
           element={
@@ -59,6 +83,7 @@ const App = () => {
             />
           }
         />
+
         <Route
           path="/users"
           element={

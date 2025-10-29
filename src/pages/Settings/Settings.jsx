@@ -1,11 +1,66 @@
 import React, { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
 import "./Settings.css";
+import UserForm from "../../components/UserForm/UserForm.jsx";
+import UsersList from "../../components/UsersList/UsersList.jsx";
+import { fetchUsers, updateUser } from "../../Service/UserService.js";
 
 const Settings = () => {
   const [activeTab, setActiveTab] = useState("profile");
   const [loading, setLoading] = useState(false);
 
+
+  const [users, setUsers] = useState([]);
+  
+    useEffect(() => {
+      async function loadUsers() {
+        try {
+          setLoading(true);
+          
+          const response = await fetchUsers();
+          const allUsers = Array.isArray(response?.data) ? response.data : [];
+          const onlyRoleUsers = allUsers.filter((u) => (u?.role ?? "") === "ROLE_ADMIN");
+          setUsers(onlyRoleUsers);
+  
+        } catch (error) {
+          console.error(error);
+          toast.error("Unable to fetch users");
+        } finally {
+          setLoading(false);
+        }
+      }
+      loadUsers();
+    }, []);
+  
+    const [selectedUser, setSelectedUser] = useState(null);
+  
+    const onEdit = (user) => {
+      // show user in the left form for editing
+      setSelectedUser(user);
+      // optionally scroll to top or focus
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+  
+    const onUpdateUser = (updated) => {
+      setUsers((prev) => {
+        // If the updated user is no longer ROLE_USER, remove from list
+        if ((updated?.role ?? "") !== "ROLE_ADMIN") {
+          return prev.filter((u) => u.userId !== updated.userId);
+        }
+        // Otherwise, update or add if missing
+        const exists = prev.some((u) => u.userId === updated.userId);
+        return exists
+          ? prev.map((u) => (u.userId === updated.userId ? updated : u))
+          : [...prev, updated];
+      });
+      setSelectedUser(null);
+    };
+  
+
+
+  
+
+  
   // Admin Profile State
   const [adminProfile, setAdminProfile] = useState({
     name: "",
@@ -51,6 +106,12 @@ const Settings = () => {
     enableSMSReceipts: false,
   });
 
+  const [admins, setAdmins] = useState([]);
+  const [selectedAdmin, setSelectedAdmin] = useState(null);
+  const [loadingAdmins, setLoadingAdmins] = useState(false);
+  // track when editing an admin via the profile form
+  const [editingAdminId, setEditingAdminId] = useState(null);
+
   // Load saved settings from localStorage
   useEffect(() => {
     const savedBusinessInfo = localStorage.getItem("businessInfo");
@@ -77,38 +138,71 @@ const Settings = () => {
     }
   }, []);
 
+  // Load admin users for Settings page right panel
+  useEffect(() => {
+    async function loadAdmins() {
+      try {
+        setLoadingAdmins(true);
+        const response = await fetchUsers();
+        const allUsers = Array.isArray(response?.data) ? response.data : [];
+        const onlyAdmins = allUsers.filter((u) => (u?.role ?? "") === "ROLE_ADMIN");
+        setAdmins(onlyAdmins);
+      } catch (e) {
+        toast.error("Unable to fetch admin users");
+      } finally {
+        setLoadingAdmins(false);
+      }
+    }
+    loadAdmins();
+  }, []);
+
   // Handle Admin Profile Update
-  const handleAdminProfileUpdate = (e) => {
+  const handleAdminProfileUpdate = async (e) => {
     e.preventDefault();
-    if (
-      adminProfile.newPassword &&
-      adminProfile.newPassword !== adminProfile.confirmPassword
-    ) {
+    if (adminProfile.newPassword && adminProfile.newPassword !== adminProfile.confirmPassword) {
       toast.error("Passwords do not match!");
       return;
     }
-
     setLoading(true);
-    setTimeout(() => {
-      // Update local storage
-      const userDetails = JSON.parse(localStorage.getItem("userDetails"));
-      const updatedDetails = {
-        ...userDetails,
-        name: adminProfile.name,
-        email: adminProfile.email,
-        phone: adminProfile.phone,
-      };
-      localStorage.setItem("userDetails", JSON.stringify(updatedDetails));
-
+    try {
+      if (editingAdminId) {
+        // Update selected admin via API
+        const payload = {
+          name: adminProfile.name,
+          email: adminProfile.email,
+          // phone may not exist on backend schema; include only if supported
+          phone: adminProfile.phone,
+          role: 'ROLE_ADMIN',
+        };
+        const response = await updateUser(editingAdminId, payload);
+        const updated = response?.data?.userId ? response.data : { ...payload, userId: editingAdminId };
+        setAdmins((prev) => prev.map((u) => (u.userId === editingAdminId ? { ...u, ...updated } : u)));
+        toast.success('Admin updated');
+        setEditingAdminId(null);
+      } else {
+        // Default behavior: persist local admin profile (current signed-in admin)
+        const userDetails = JSON.parse(localStorage.getItem("userDetails"));
+        const updatedDetails = {
+          ...userDetails,
+          name: adminProfile.name,
+          email: adminProfile.email,
+          phone: adminProfile.phone,
+        };
+        localStorage.setItem("userDetails", JSON.stringify(updatedDetails));
+        toast.success("Profile updated successfully!");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error('Failed to update admin');
+    } finally {
       setLoading(false);
-      toast.success("Profile updated successfully!");
-      setAdminProfile({
-        ...adminProfile,
+      setAdminProfile((prev) => ({
+        ...prev,
         currentPassword: "",
         newPassword: "",
         confirmPassword: "",
-      });
-    }, 1000);
+      }));
+    }
   };
 
   // Handle Business Info Update
@@ -170,6 +264,34 @@ const Settings = () => {
     }
   };
 
+  // Handle admin update (inline, just like ManageUsers logic for admins)
+  const onUpdateAdmin = (updated) => {
+    setAdmins((prev) => {
+      if ((updated?.role ?? "") !== "ROLE_ADMIN") {
+        return prev.filter((u) => u.userId !== updated.userId);
+      }
+      const exists = prev.some((u) => u.userId === updated.userId);
+      return exists ? prev.map((u) => (u.userId === updated.userId ? updated : u)) : [...prev, updated];
+    });
+    setSelectedAdmin(null);
+  };
+
+  const handleEditAdmin = (user) => {
+    // populate Admin Profile form with selected admin data and switch to Profile tab
+    setActiveTab('profile');
+    setEditingAdminId(user.userId);
+    setAdminProfile((prev) => ({
+      ...prev,
+      name: user?.name || '',
+      email: user?.email || '',
+      phone: user?.phone || '',
+      currentPassword: '',
+      newPassword: '',
+      confirmPassword: '',
+    }));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <div className="settings-container">
       {/* Header */}
@@ -229,7 +351,7 @@ const Settings = () => {
                 <p>Update your personal information and change password</p>
               </div>
 
-              <form
+              {/* <form
                 onSubmit={handleAdminProfileUpdate}
                 className="settings-form"
               >
@@ -291,9 +413,11 @@ const Settings = () => {
                       placeholder="Enter your phone number"
                     />
                   </div>
-                </div>
+                </div> */}
 
-                <div className="divider">
+                
+
+                {/* <div className="divider">
                   <span>Change Password</span>
                 </div>
 
@@ -353,9 +477,9 @@ const Settings = () => {
                       placeholder="Confirm new password"
                     />
                   </div>
-                </div>
+                </div> */}
 
-                <div className="form-actions">
+                {/* <div className="form-actions">
                   <button type="submit" className="btn-save" disabled={loading}>
                     {loading ? (
                       <>
@@ -371,7 +495,37 @@ const Settings = () => {
                   </button>
                 </div>
               </form>
+ */}
+
+
+               <div className="users-container text-dark">
+                      <div className="left-column">
+                        <h3>
+                          <i className="bi bi-person-plus-fill"></i>{" "}
+                          {selectedUser ? "Edit Admin" : "Add New Admin"}
+                        </h3>
+                        <UserForm
+                          setUsers={setUsers}
+                          selectedUser={selectedUser}
+                          onUpdateUser={onUpdateUser}
+                        />
+                      </div>
+                      <div className="right-column">
+                        <h3>
+                          <i className="bi bi-people-fill"></i> All Admins
+                        </h3>
+                                <UsersList users={users} setUsers={setUsers} onEdit={onEdit} />
+                        
+                      </div>
+                    </div>
+
+
+                {/* Admins Management Section */}
+          
             </div>
+
+
+
           )}
 
           {/* Business Info Tab */}
@@ -996,6 +1150,8 @@ const Settings = () => {
               </form>
             </div>
           )}
+
+          
         </div>
       </div>
     </div>

@@ -1029,7 +1029,7 @@ const Dashboard = () => {
           </div>
 
           {/* Analytics: Top Product and Top Employee */}
-          <div className="analytics-grid">
+          {/* <div className="analytics-grid">
             {topProduct ? (
               <div className="analytics-card">
                 <div className="analytics-title">
@@ -1065,9 +1065,9 @@ const Dashboard = () => {
                   </div>
                 </div>
               </div>
-            )}
+            )} */}
 
-            {topEmployee ? (
+            {/* {topEmployee ? (
               <div className="analytics-card">
                 <div className="analytics-title">
                   <i className="bi bi-person-badge"></i> Top Employee by Revenue
@@ -1086,7 +1086,7 @@ const Dashboard = () => {
                 </div>
               </div>
             ) : null}
-          </div>
+          </div> */}
 
           {/* Payment Breakdown Table - Only show when a payment mode is selected */}
           {paymentMode && (

@@ -23,6 +23,7 @@ const CartSummary = ({
   setShowQRModal,
   qrCodeImage,
   taxPercent,
+  setTaxPercent
 }) => {
   const { cartItems, clearCart } = useContext(AppContext);
 

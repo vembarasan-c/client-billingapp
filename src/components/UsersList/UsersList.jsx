@@ -41,7 +41,7 @@ const UsersList = ({ users, setUsers, onEdit }) => {
             type="text"
             name="keyword"
             id="keyword"
-            placeholder="Search users by name..."
+            placeholder="Search Admins by name..."
             className="form-control search-input"
             onChange={(e) => setSearchTerm(e.target.value)}
             value={searchTerm}
